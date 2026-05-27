@@ -1,3 +1,4 @@
+declare const process: { env: { [key: string]: string } }
 export default async function handler(req: any, res: any) {
     const query = new URLSearchParams({
         ...req.query,
