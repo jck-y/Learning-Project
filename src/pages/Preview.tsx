@@ -40,9 +40,9 @@ function Preview() {
 
     return (
         <div>
-            <h2>{data.images_results[1].title}</h2>
-            <img src={data.images_results[1].original} width="400" />
-            <p>Sumber: {data.images_results[1].source}</p>
+            <h2>{data.images_results[0].title}</h2>
+            <img src={data.images_results[0].original} width="400" />
+            <p>Sumber: {data.images_results[0].source}</p>
         </div>
     )
 }
