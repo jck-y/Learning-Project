@@ -1,9 +1,19 @@
 
 import { useEffect, useState } from "react";
 
-function Preview() {
-    const [data, setData] = useState(null)
+interface ImageResult {
+  title: string;
+  original: string;
+  source: string;
+}
+interface SerpApiResponse {
+  images_results: ImageResult[];
+}
 
+
+function Preview() {
+    // const [data, setData] = useState(null)
+    const [data, setData] = useState<SerpApiResponse | null>(null);
     const API_KEY = "7667d67efe0280c481ede11ce66d6fcb3e87f3081e6bd79166be908245621066"
     const ENDPOINT = "https://serpapi.com/search"
 
@@ -17,7 +27,7 @@ function Preview() {
         const serpUrl = `${ENDPOINT}?${queryString}`
         fetch("https://corsproxy.io/?" + encodeURIComponent(serpUrl))
             .then((res) => res.json())
-            .then((result) => {
+            .then((result: SerpApiResponses) => {
                 console.log(result)
                 setData(result)
             })
