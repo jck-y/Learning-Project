@@ -27,7 +27,7 @@ function Preview() {
         const serpUrl = `${ENDPOINT}?${queryString}`
         fetch("https://corsproxy.io/?" + encodeURIComponent(serpUrl))
             .then((res) => res.json())
-            .then((result: SerpApiResponses) => {
+            .then((result: SerpApiResponse) => {
                 console.log(result)
                 setData(result)
             })
