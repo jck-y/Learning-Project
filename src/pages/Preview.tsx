@@ -1,3 +1,4 @@
+
 import { useEffect, useState } from "react";
 
 interface ImageResult {
@@ -9,9 +10,10 @@ interface SerpApiResponse {
   images_results: ImageResult[];
 }
 
+
 function Preview() {
+    // const [data, setData] = useState(null)
     const [data, setData] = useState<SerpApiResponse | null>(null);
-    const [error, setError] = useState<string | null>(null) // ✅ 1. tambah error state
     const API_KEY = "7667d67efe0280c481ede11ce66d6fcb3e87f3081e6bd79166be908245621066"
     const ENDPOINT = "https://serpapi.com/search"
 
@@ -20,32 +22,29 @@ function Preview() {
         q: "dog",
         hl: "id",
     }
-
     useEffect(() => {
-        const queryString = new URLSearchParams({ ...params, api_key: API_KEY }).toString()
-        const serpUrl = `${ENDPOINT}?${queryString}`
-        fetch(`https://api.allorigins.win/get?url=${encodeURIComponent(serpUrl)}`)
+        // const queryString = new URLSearchParams({ ...params, api_key: API_KEY }).toString()
+        // const serpUrl = `${ENDPOINT}?${queryString}`
+        // fetch("https://corsproxy.io/?" + encodeURIComponent(serpUrl))
+        const queryString = new URLSearchParams(params).toString()
+        fetch(`/api/search?${queryString}`)
             .then((res) => res.json())
-            .then((wrapper) => {
-                const result: SerpApiResponse = JSON.parse(wrapper.contents) // ✅ allorigins membungkus di .contents
+            .then((result: SerpApiResponse) => {
                 console.log(result)
-                if (!result.images_results) { // ✅ guard jika data kosong
-                    setError("Data tidak ditemukan")
-                    return
-                }
                 setData(result)
             })
-            .catch((err) => setError(err.message))
+            .catch((err) => console.error("Error:", err))
     }, [])
 
-    if (error) return <h1>Error: {error}</h1>  // ✅ 3. tampilkan error
-    if (!data) return <h1>Loading...</h1>
+    if (!data) {
+        return <h1>Loading...</h1>
+    }
 
     return (
         <div>
-            <h2>{data.images_results[0].title}</h2>    {/* ✅ 4. ganti [1] → [0] */}
-            <img src={data.images_results[0].original} width="400" />
-            <p>Sumber: {data.images_results[0].source}</p>
+            <h2>{data.images_results[1].title}</h2>
+            <img src={data.images_results[1].original} width="400" />
+            <p>Sumber: {data.images_results[1].source}</p>
         </div>
     )
 }
