@@ -24,13 +24,18 @@ function Preview() {
     useEffect(() => {
         const queryString = new URLSearchParams({ ...params, api_key: API_KEY }).toString()
         const serpUrl = `${ENDPOINT}?${queryString}`
-        fetch("https://corsproxy.io/?" + encodeURIComponent(serpUrl))
+        fetch(`https://api.allorigins.win/get?url=${encodeURIComponent(serpUrl)}`)
             .then((res) => res.json())
-            .then((result: SerpApiResponse) => {
+            .then((wrapper) => {
+                const result: SerpApiResponse = JSON.parse(wrapper.contents) // ✅ allorigins membungkus di .contents
                 console.log(result)
+                if (!result.images_results) { // ✅ guard jika data kosong
+                    setError("Data tidak ditemukan")
+                    return
+                }
                 setData(result)
             })
-            .catch((err) => setError(err.message)) // ✅ 2. tangkap error
+            .catch((err) => setError(err.message))
     }, [])
 
     if (error) return <h1>Error: {error}</h1>  // ✅ 3. tampilkan error
