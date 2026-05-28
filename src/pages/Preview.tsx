@@ -1,50 +1,53 @@
-
 import { useEffect, useState } from "react";
 
-interface ImageResult {
+// ✏️ STEP 1: Ganti nama interface & field sesuai hasil console.log
+// Sebelum  → interface ImageResult { title, original, source }
+// Sesudah  ↓
+interface GameResult {
   title: string;
-  original: string;
-  source: string;
-}
-interface SerpApiResponse {
-  images_results: ImageResult[];
+  thumbnail: string;
+  rating: number;
+  link: string;
 }
 
+// ✏️ STEP 2: Ganti nama array sesuai hasil console.log
+// Sebelum  → images_results: ImageResult[]
+// Sesudah  ↓
+interface SerpApiResponse {
+  organic_results: GameResult[];
+}
 
 function Preview() {
-    // const [data, setData] = useState(null)
     const [data, setData] = useState<SerpApiResponse | null>(null);
-    // const API_KEY = "7667d67efe0280c481ede11ce66d6fcb3e87f3081e6bd79166be908245621066"
-    // const ENDPOINT = "https://serpapi.com/search"
 
     const params = {
-        engine: "google_images",
-        q: "dog",
+        engine: "google_play_games", // ✏️ STEP 3: Ganti engine
+        q: "minecraft",              // ✏️ STEP 4: Ganti keyword
         hl: "id",
     }
+
     useEffect(() => {
-        // const queryString = new URLSearchParams({ ...params, api_key: API_KEY }).toString()
-        // const serpUrl = `${ENDPOINT}?${queryString}`
-        // fetch("https://corsproxy.io/?" + encodeURIComponent(serpUrl))
         const queryString = new URLSearchParams(params).toString()
         fetch(`/api/search?${queryString}`)
             .then((res) => res.json())
             .then((result: SerpApiResponse) => {
-                console.log(result)
+                console.log(result) // lihat struktur data disini dulu
                 setData(result)
             })
             .catch((err) => console.error("Error:", err))
     }, [])
 
-    if (!data) {
-        return <h1>Loading...</h1>
-    }
+    if (!data) return <h1>Loading...</h1>
 
     return (
+        // ✏️ STEP 5: Ganti tampilan sesuai field yang tersedia
+        // Sebelum  → data.images_results[0].original, .title, .source
+        // Sesudah  ↓
         <div>
-            <h2>{data.images_results[1].title}</h2>
-            <img src={data.images_results[1].original} width="400" />
-            <p>Sumber: {data.images_results[1].source}</p>
+            <h2>{data.organic_results[0].title}</h2>
+            <img src={data.organic_results[0].thumbnail} width="200" />
+            <p>Rating: {data.organic_results[0].rating}</p>
+            <a href={data.organic_results[0].link}>Buka di Play Store</a>
         </div>
     )
 }
